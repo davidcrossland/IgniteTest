@@ -21,7 +21,7 @@ public class Main {
     public static void main(String [] args)
     {
         Ignition.setClientMode(true);
-        try (Ignite ignite = Ignition.start()) {
+        try (Ignite ignite = Ignition.start("example-ignite.xml")) {
             System.out.println();
             System.out.println("Compute runnable example started.");
 
