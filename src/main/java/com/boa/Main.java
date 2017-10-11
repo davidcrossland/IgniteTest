@@ -21,13 +21,23 @@ public class Main {
     public static void main(String [] args)
     {
         try (Ignite ignite = Ignition.start("example-ignite.xml")) {
-            // Put values in cache.
-            IgniteCache<Integer, String> cache = ignite.getOrCreateCache("myCache");
-            cache.put(1, "Hello");
-            cache.put(2, "World!");
-            // Get values from cache
-            // Broadcast 'Hello World' on all the nodes in the cluster.
-            ignite.compute().broadcast(()->System.out.println(cache.get(1) + " " + cache.get(2)));
+            System.out.println();
+            System.out.println("Compute runnable example started.");
+
+            IgniteCompute compute = ignite.compute();
+
+            // Iterate through all words in the sentence and create runnable jobs.
+            for (final String word : "Print words using runnable".split(" ")) {
+                // Execute runnable on some node.
+                compute.run(() -> {
+                    System.out.println();
+                    System.out.println(">>> Printing '" + word + "' on this node from ignite job.");
+                });
+            }
+
+            System.out.println();
+            System.out.println(">>> Finished printing words using runnable execution.");
+            System.out.println(">>> Check all nodes for output (this node is also part of the cluster).");
         }
 
     }
