@@ -1,6 +1,9 @@
 package com.boa;
 
-import org.apache.ignite.*;
+import org.apache.ignite.Ignite;
+import org.apache.ignite.IgniteCache;
+import org.apache.ignite.IgniteCompute;
+import org.apache.ignite.Ignition;
 import org.apache.ignite.binary.BinaryObject;
 import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.ScanQuery;
@@ -19,13 +22,23 @@ public class Main {
     {
         Ignition.setClientMode(true);
         try (Ignite ignite = Ignition.start()) {
-            IgniteCluster cluster = ignite.cluster();
+            System.out.println();
+            System.out.println("Compute runnable example started.");
 
-            // Compute instance over remote nodes.
-            IgniteCompute compute = ignite.compute(cluster.forRemotes());
+            IgniteCompute compute = ignite.compute();
 
-            // Print hello message on all remote nodes.
-            compute.broadcast(() -> System.out.println("Hello node: " + cluster.localNode().id()));
+            // Iterate through all words in the sentence and create runnable jobs.
+            for (final String word : "Print words using runnable".split(" ")) {
+                // Execute runnable on some node.
+                compute.run(() -> {
+                    System.out.println();
+                    System.out.println(">>> Printing '" + word + "' on this node from ignite job.");
+                });
+            }
+
+            System.out.println();
+            System.out.println(">>> Finished printing words using runnable execution.");
+            System.out.println(">>> Check all nodes for output (this node is also part of the cluster).");
         }
 
     }
