@@ -24,6 +24,13 @@
             </configuration>
           </execution>
         </executions>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>com.boa.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
